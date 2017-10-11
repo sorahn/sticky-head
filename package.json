@@ -20,16 +20,16 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c",
-    "start": "rollup -c -w",
-    "predeploy": "cd example && npm install && npm run build",
-    "deploy": "gh-pages -d example/build"
+  "files": ["dist"],
+  "lint-staged": {
+    "*.{js,json}": ["yarn format", "git add"]
   },
-  "dependencies": {
-    "prettier": "^1.7.4"
+  "importSort": {
+    ".js": {
+      "style": "module"
+    }
   },
+  "dependencies": {},
   "peerDependencies": {
     "prop-types": "^15.5.4",
     "react": "^0.14.9 || ^15.0.0 || ^16.0.0",
@@ -41,12 +41,26 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
+    "eslint": "^4.8.0",
+    "eslint-plugin-react-app": "^1.0.2",
     "gh-pages": "^1.0.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.2.3",
+    "prettier": "^1.7.4",
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-postcss": "^0.5.5"
   },
-  "files": ["dist"]
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "lint": "eslint src",
+    "precommit": "yarn lint && yarn sort-imports && lint-staged",
+    "start": "rollup -c -w",
+    "format": "prettier --write",
+    "predeploy": "cd example && npm install && npm run build",
+    "deploy": "gh-pages -d example/build"
+  }
 }

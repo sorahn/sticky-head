@@ -10,13 +10,13 @@ class TR extends React.Component {
   render() {
     return (
       <tr>
-        {React.Children.map(this.props.children, (child, i) =>
+        {React.Children.map(this.props.children, (child, i) => (
           <TH
             {...child.props}
             width={this.props.widths[i]}
             updateCellWidth={this.updateCellWidth(i)}
           />
-        )}
+        ))}
       </tr>
     );
   }
@@ -32,9 +32,9 @@ class FixedTR extends React.Component {
   render() {
     return (
       <tr>
-        {React.Children.map(this.props.children, (child, i) =>
+        {React.Children.map(this.props.children, (child, i) => (
           <th style={{ width: this.props.widths[i] }} {...child.props} />
-        )}
+        ))}
       </tr>
     );
   }
@@ -121,35 +121,35 @@ class StickyHead extends React.PureComponent {
 
   render() {
     console.log("render - FixedHeader");
-    const fixedTable = this.state.displayHeader
-      ? <table
-          key="table"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: this.state.leftOffset,
-            width: this.state.headerWidth,
-            background: "white",
-          }}
-          className={this.thead && this.thead.parentNode.className}
-        >
-          <thead>
-            {React.Children.map(this.props.children, (child, i) =>
-              <FixedTR {...child.props} widths={this.state.widths} />
-            )}
-          </thead>
-        </table>
-      : null;
+    const fixedTable = this.state.displayHeader ? (
+      <table
+        key="table"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: this.state.leftOffset,
+          width: this.state.headerWidth,
+          background: "white",
+        }}
+        className={this.thead && this.thead.parentNode.className}
+      >
+        <thead>
+          {React.Children.map(this.props.children, (child, i) => (
+            <FixedTR {...child.props} widths={this.state.widths} />
+          ))}
+        </thead>
+      </table>
+    ) : null;
 
     const originalThead = (
       <thead key="thead" ref={el => (this.thead = el)}>
-        {React.Children.map(this.props.children, (child, i) =>
+        {React.Children.map(this.props.children, (child, i) => (
           <TR
             {...child.props}
             widths={this.state.widths}
             updateColumnWidth={this.updateColumnWidth}
           />
-        )}
+        ))}
       </thead>
     );
 
