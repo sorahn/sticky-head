@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
 
+// Comment for comments sake
 class TR extends React.Component {
   updateCellWidth = i => width => {
     this.props.updateColumnWidth(width, i);

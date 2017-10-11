@@ -57,7 +57,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",
     "lint": "eslint src",
-    "precommit": "yarn lint && yarn sort-imports && lint-staged",
+    "precommit": "yarn lint && lint-staged",
     "start": "rollup -c -w",
     "format": "prettier --write",
     "predeploy": "cd example && npm install && npm run build",
