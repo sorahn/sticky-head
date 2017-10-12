@@ -6,8 +6,8 @@
         "modules": false
       }
     ],
-    "stage-3",
+    "stage-2",
     "react"
   ],
-  "plugins": ["external-helpers", "transform-class-properties"]
+  "plugins": ["external-helpers"]
 }
