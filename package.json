@@ -1,6 +1,6 @@
 {
   "name": "sticky-head",
-  "version": "1.0.3",
+  "version": "0.0.2",
   "description": "Instant sticky <table> header. Just add water.",
   "contributors": [
     {
@@ -32,12 +32,14 @@
   "dependencies": {},
   "peerDependencies": {
     "prop-types": "^15.5.4",
-    "react": "^0.14.9 || ^15.0.0 || ^16.0.0",
-    "react-dom": "^0.14.9 || ^15.0.0 || ^16.0.0"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   },
   "devDependencies": {
+    "react-scripts": "1.0.14",
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
@@ -54,11 +56,14 @@
     "rollup-plugin-postcss": "^0.5.5"
   },
   "scripts": {
+    "start": "react-scripts start",
+    "build-examples": "react-scripts build",
+    "test-examples": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",
     "lint": "eslint src",
     "precommit": "yarn lint && lint-staged",
-    "start": "rollup -c -w",
     "format": "prettier --write",
     "predeploy": "cd example && npm install && npm run build",
     "deploy": "gh-pages -d example/build"
