@@ -54,14 +54,20 @@ export default class StickyHead extends React.PureComponent {
     // pull the classnames from the original table to add to my copy.
     const originalTableClass = this.thead && this.thead.parentNode.className
 
+    const tableStyle = {
+      background: this.props.headerBackground,
+      left: this.state.leftOffset,
+      top: this.props.topOffset,
+      width: this.state.headerWidth,
+      zIndex: this.props.headerZIndex,
+    }
+
     const fixedTable = this.state.displayStickyHead && (
       <FixedTable
+        className={originalTableClass}
         key="table"
-        left={this.state.leftOffset}
-        originalTableClass={originalTableClass}
         rows={this.props.children}
-        top={this.props.topOffset}
-        width={this.state.headerWidth}
+        style={tableStyle}
         widths={this.state.widths}
       />
     )
@@ -82,11 +88,14 @@ export default class StickyHead extends React.PureComponent {
 
   static defaultProps = {
     topOffset: 0,
+    headerBackground: "white",
+    headerZIndex: 1,
   }
 
   static propTypes = {
     topOffset: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     children: PropTypes.node,
-    fixedHeaderBackground: PropTypes.string,
+    headerBackground: PropTypes.string,
+    headerZIndex: PropTypes.number,
   }
 }

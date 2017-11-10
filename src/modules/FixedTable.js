@@ -16,16 +16,13 @@ export default class FixedTable extends React.Component {
   }
 
   render() {
-    const tableStyle = {
-      background: this.props.background,
-      left: this.props.left,
+    const style = {
+      ...this.props.style,
       position: "fixed",
-      top: this.props.top,
-      width: this.props.width,
     }
 
     return ReactDOM.createPortal(
-      <table style={tableStyle} className={this.props.originalTableClass}>
+      <table style={style} className={this.props.className}>
         <thead>
           {React.Children.map(this.props.rows, (child, rowIndex) => (
             <StickyTR {...child.props} widths={this.props.widths[rowIndex]} />
@@ -36,16 +33,9 @@ export default class FixedTable extends React.Component {
     )
   }
 
-  static defaultProps = {
-    background: "white",
-    top: 0,
-  }
-
   static propTypes = {
-    background: PropTypes.string,
-    left: PropTypes.number,
-    originalTableClass: PropTypes.string,
-    top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    style: PropTypes.object,
+    className: PropTypes.string,
     width: PropTypes.number,
     widths: PropTypes.array.isRequired,
   }
