@@ -1,6 +1,5 @@
 import PropTypes from "prop-types"
 import React from "react"
-import ReactDOM from "react-dom"
 
 import FixedTable from "./FixedTable"
 import OriginalTR from "./OriginalTR"
@@ -12,8 +11,6 @@ export default class StickyHead extends React.PureComponent {
     leftOffset: 0,
     widths: [],
   }
-
-  tableContainer = document.createElement("div")
 
   /**
    * rowIndex = <tr> index
@@ -44,13 +41,11 @@ export default class StickyHead extends React.PureComponent {
 
   componentDidMount() {
     this.updateSizes()
-    document.body.appendChild(this.tableContainer)
     window.addEventListener("scroll", this.updateSizes, false)
     window.addEventListener("resize", this.updateSizes)
   }
 
   componentWillUnmount() {
-    document.body.removeChild(this.tableContainer)
     window.removeEventListener("scroll", this.updateSizes)
     window.removeEventListener("resize", this.updateSizes)
   }
@@ -59,20 +54,17 @@ export default class StickyHead extends React.PureComponent {
     // pull the classnames from the original table to add to my copy.
     const originalTableClass = this.thead && this.thead.parentNode.className
 
-    const fixedTable =
-      this.state.displayStickyHead &&
-      ReactDOM.createPortal(
-        <FixedTable
-          key="table"
-          left={this.state.leftOffset}
-          originalTableClass={originalTableClass}
-          rows={this.props.children}
-          top={this.props.topOffset}
-          width={this.state.headerWidth}
-          widths={this.state.widths}
-        />,
-        this.tableContainer
-      )
+    const fixedTable = this.state.displayStickyHead && (
+      <FixedTable
+        key="table"
+        left={this.state.leftOffset}
+        originalTableClass={originalTableClass}
+        rows={this.props.children}
+        top={this.props.topOffset}
+        width={this.state.headerWidth}
+        widths={this.state.widths}
+      />
+    )
 
     const originalThead = (
       <thead key="thead" ref={el => (this.thead = el)}>
