@@ -2,57 +2,41 @@ import PropTypes from "prop-types"
 import React from "react"
 import ReactDOM from "react-dom"
 
+import BasicTH from "./BasicTH"
+
 class TR extends React.PureComponent {
+  renderChildren = (child, index) => {
+    const updateCellWidth = this.props.updateCellWidth(index)
+
+    if (child.type === "th") {
+      return <BasicTH {...child.props} updateCellWidth={updateCellWidth} />
+    }
+
+    return React.cloneElement(child, { updateCellWidth })
+  }
+
   render() {
     return (
-      <tr>
-        {React.Children.map(this.props.children, (child, columnIndex) => (
-          <TH
-            {...child.props}
-            updateCellWidth={this.props.updateCellWidth(columnIndex)}
-          />
-        ))}
-      </tr>
+      <tr>{React.Children.map(this.props.children, this.renderChildren)}</tr>
     )
   }
 
   static propTypes = {
     updateCellWidth: PropTypes.func.isRequired,
     children: PropTypes.node,
-  }
-}
-
-class TH extends React.PureComponent {
-  updateWidth() {
-    const { width } = this.th.getBoundingClientRect()
-    this.props.updateCellWidth(width)
-  }
-
-  componentDidMount() {
-    this.updateWidth()
-  }
-
-  componentDidUpdate() {
-    this.updateWidth()
-  }
-
-  render() {
-    const { updateCellWidth, width, ...childProps } = this.props
-
-    return (
-      <th ref={el => (this.th = el)} {...childProps}>
-        {this.props.children}
-      </th>
-    )
-  }
-
-  static propTypes = {
-    children: PropTypes.node,
-    updateCellWidth: PropTypes.func.isRequired,
   }
 }
 
 class StickyTR extends React.PureComponent {
+  renderChildren = (child, index) => {
+    const width = this.props.widths[index]
+
+    if (child.type === "th") {
+      return <BasicTH width={width} {...child.props} />
+    }
+
+    return React.cloneElement(child, { width })
+  }
   render() {
     return (
       <tr>
@@ -87,6 +71,8 @@ class StickyHead extends React.PureComponent {
     })
   }
 
+  // @TODO
+  // stop the sticky header at the bottom of the table - 1 row
   updateSizes = () => {
     const {
       x: leftOffset,
@@ -134,10 +120,10 @@ class StickyHead extends React.PureComponent {
 
     const originalThead = (
       <thead key="thead" ref={el => (this.thead = el)} {...this.props}>
-        {React.Children.map(this.props.children, (child, rowIndex) => (
+        {React.Children.map(this.props.children, (child, columnIndex) => (
           <TR
             {...child.props}
-            updateCellWidth={this.updateCellWidth(rowIndex)}
+            updateCellWidth={this.updateCellWidth(columnIndex)}
           />
         ))}
       </thead>
