@@ -10,11 +10,11 @@ import React from "react"
  * This component will report it's width up the chain when the component mounts,
  * and when the content changes.
  */
-export default class BasicTH extends React.PureComponent {
+export default class BasicTH extends React.Component {
   th = undefined
 
   updateWidth() {
-    const { width } = this.th && this.th.getBoundingClientRect()
+    const { width } = this.th.getBoundingClientRect()
     this.props.updateCellWidth(width)
   }
 
