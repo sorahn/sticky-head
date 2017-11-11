@@ -1,83 +1,22 @@
 import PropTypes from "prop-types"
 import React from "react"
-import ReactDOM from "react-dom"
 
-class TR extends React.PureComponent {
-  render() {
-    return (
-      <tr>
-        {React.Children.map(this.props.children, (child, columnIndex) => (
-          <TH
-            {...child.props}
-            updateCellWidth={this.props.updateCellWidth(columnIndex)}
-          />
-        ))}
-      </tr>
-    )
-  }
+import FixedTable from "./FixedTable"
+import OriginalTR from "./OriginalTR"
 
-  static propTypes = {
-    updateCellWidth: PropTypes.func.isRequired,
-    children: PropTypes.node,
-  }
-}
-
-class TH extends React.PureComponent {
-  updateWidth() {
-    const { width } = this.th.getBoundingClientRect()
-    this.props.updateCellWidth(width)
-  }
-
-  componentDidMount() {
-    this.updateWidth()
-  }
-
-  componentDidUpdate() {
-    this.updateWidth()
-  }
-
-  render() {
-    const { updateCellWidth, width, ...childProps } = this.props
-
-    return (
-      <th ref={el => (this.th = el)} {...childProps}>
-        {this.props.children}
-      </th>
-    )
-  }
-
-  static propTypes = {
-    children: PropTypes.node,
-    updateCellWidth: PropTypes.func.isRequired,
-  }
-}
-
-class StickyTR extends React.PureComponent {
-  render() {
-    return (
-      <tr>
-        {React.Children.map(this.props.children, (child, rowIndex) => (
-          <th style={{ width: this.props.widths[rowIndex] }} {...child.props} />
-        ))}
-      </tr>
-    )
-  }
-
-  static propTypes = {
-    widths: PropTypes.array.isRequired,
-  }
-}
-
-class StickyHead extends React.PureComponent {
+export default class StickyHead extends React.PureComponent {
   state = {
-    displayHeader: false,
+    displayStickyHead: false,
     headerWidth: 0,
     leftOffset: 0,
     widths: [],
   }
 
-  tableContainer = document.createElement("div")
-
+  /**
+   * rowIndex = <tr> index
+   * columnIndex = <th> index
+   * width = width of <th>
+   */
   updateCellWidth = rowIndex => columnIndex => width => {
     this.setState(state => {
       const widths = state.widths
@@ -87,6 +26,8 @@ class StickyHead extends React.PureComponent {
     })
   }
 
+  // @TODO
+  // stop the sticky header at the bottom of the table - 1 row
   updateSizes = () => {
     const {
       x: leftOffset,
@@ -94,48 +35,47 @@ class StickyHead extends React.PureComponent {
       top,
       bottom,
     } = this.thead.parentNode.getBoundingClientRect()
-    const displayHeader = top < 0 && bottom > 0
-    this.setState({ leftOffset, headerWidth, displayHeader })
+    const displayStickyHead = top < 0 && bottom > 0
+    this.setState({ leftOffset, headerWidth, displayStickyHead })
   }
 
   componentDidMount() {
     this.updateSizes()
-    document.body.appendChild(this.tableContainer)
     window.addEventListener("scroll", this.updateSizes, false)
     window.addEventListener("resize", this.updateSizes)
   }
 
   componentWillUnmount() {
-    document.body.removeChild(this.tableContainer)
     window.removeEventListener("scroll", this.updateSizes)
     window.removeEventListener("resize", this.updateSizes)
   }
 
   render() {
-    const fixedTable = this.state.displayHeader ? (
-      <table
+    // pull the classnames from the original table to add to my copy.
+    const originalTableClass = this.thead && this.thead.parentNode.className
+
+    const tableStyle = {
+      background: this.props.headerBackground,
+      left: this.state.leftOffset,
+      top: this.props.topOffset,
+      width: this.state.headerWidth,
+      zIndex: this.props.headerZIndex,
+    }
+
+    const fixedTable = this.state.displayStickyHead && (
+      <FixedTable
+        className={originalTableClass}
         key="table"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: this.state.leftOffset,
-          width: this.state.headerWidth,
-          background: "white",
-        }}
-        className={this.thead && this.thead.parentNode.className}
-      >
-        <thead>
-          {React.Children.map(this.props.children, (child, i) => (
-            <StickyTR {...child.props} widths={this.state.widths[i]} />
-          ))}
-        </thead>
-      </table>
-    ) : null
+        rows={this.props.children}
+        style={tableStyle}
+        widths={this.state.widths}
+      />
+    )
 
     const originalThead = (
-      <thead key="thead" ref={el => (this.thead = el)} {...this.props}>
+      <thead key="thead" ref={el => (this.thead = el)}>
         {React.Children.map(this.props.children, (child, rowIndex) => (
-          <TR
+          <OriginalTR
             {...child.props}
             updateCellWidth={this.updateCellWidth(rowIndex)}
           />
@@ -143,15 +83,19 @@ class StickyHead extends React.PureComponent {
       </thead>
     )
 
-    return [
-      originalThead,
-      ReactDOM.createPortal(fixedTable, this.tableContainer),
-    ]
+    return [originalThead, fixedTable]
+  }
+
+  static defaultProps = {
+    topOffset: 0,
+    headerBackground: "white",
+    headerZIndex: 1,
   }
 
   static propTypes = {
+    topOffset: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     children: PropTypes.node,
+    headerBackground: PropTypes.string,
+    headerZIndex: PropTypes.number,
   }
 }
-
-export default StickyHead

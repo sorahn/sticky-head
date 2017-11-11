@@ -5,7 +5,9 @@ import Content from "./content"
 import data from "./data"
 
 const mapDataToRow = data => {
-  return data.map(row => <tr>{row.map(column => <td>{column}</td>)}</tr>)
+  return data.map((row, i) => (
+    <tr key={i}>{row.map((column, i) => <td key={i}>{column}</td>)}</tr>
+  ))
 }
 
 class App extends Component {
