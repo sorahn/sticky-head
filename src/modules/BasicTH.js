@@ -27,10 +27,10 @@ export default class BasicTH extends React.Component {
   }
 
   render() {
-    const { updateCellWidth, ...rest } = this.props
+    const { updateCellWidth, width, ...rest } = this.props
 
     return (
-      <th ref={el => (this.th = el)} {...rest}>
+      <th ref={el => (this.th = el)} width={width} {...rest}>
         {this.props.children}
       </th>
     )
