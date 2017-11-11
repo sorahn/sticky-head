@@ -4,8 +4,8 @@ import React from "react"
 import BasicTH from "./BasicTH"
 
 export default class OriginalTR extends React.PureComponent {
-  renderChildren = (child, index) => {
-    const updateCellWidth = this.props.updateCellWidth(index)
+  renderChildren = (child, columnIndex) => {
+    const updateCellWidth = this.props.updateCellWidth(columnIndex)
 
     if (child.type === "th") {
       return <BasicTH {...child.props} updateCellWidth={updateCellWidth} />

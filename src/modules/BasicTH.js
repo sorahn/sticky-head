@@ -27,28 +27,17 @@ export default class BasicTH extends React.Component {
   }
 
   render() {
-    const { updateCellWidth, width, ...rest } = this.props
+    const { updateCellWidth, ...rest } = this.props
 
     return (
-      <th ref={el => (this.th = el)} width={width} {...rest}>
+      <th ref={el => (this.th = el)} {...rest}>
         {this.props.children}
       </th>
     )
   }
 
-  /**
-   * The default function is set here so that this BasicTH can be used for both
-   * the sticky TH replacement, and the regular TH replacement.  When used in
-   * the sticky component 'updateCellWidth' will still be called, but nothing
-   * will happen.
-   */
-  static defaultProps = {
-    updateCellWidth: () => {},
-  }
-
   static propTypes = {
     children: PropTypes.node,
-    updateCellWidth: PropTypes.func,
-    width: PropTypes.number,
+    updateCellWidth: PropTypes.func.isRequired,
   }
 }
